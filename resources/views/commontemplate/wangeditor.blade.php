@@ -115,7 +115,7 @@
                         <button class="layui-btn layui-btn-sm  layui-btn-normal" @click="triggerFileUpload"><i
                                 class="layui-icon layui-icon-upload"></i>上传图片
                         </button>
-                        <button class="layui-btn layui-btn-sm  layui-btn-danger"><i
+                        <button class="layui-btn layui-btn-sm  layui-btn-danger" @click="delImage"><i
                                 class="layui-icon layui-icon-delete"></i>删除图片
                         </button>
                         <!-- 隐藏的文件输入框 -->
@@ -146,13 +146,22 @@
         </div>
     </div>
 </script>
-
+<script>
+    window.Laravel = {!! json_encode([
+        'csrfToken' => csrf_token(),
+    ]) !!};
+</script>
 <script src="{{asset('js/editor-index.js')}}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const {createEditor, createToolbar} = window.wangEditor
         const {createApp, ref, onMounted} = Vue;
         const {tree, laypage} = layui;
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': window.Laravel.csrfToken
+            }
+        });
         createApp({
             setup() {
                 // 图片总数 用于分页
@@ -332,7 +341,9 @@
                                                                             return;
                                                                         }
                                                                         if (type === 'del') { //删除节点
-
+                                                                            updateCategoryId.value = data.id;
+                                                                            delImageCategory();
+                                                                            return;
                                                                         }
                                                                     },
                                                                     click: function (obj) {
@@ -342,6 +353,16 @@
 
                                                                 })
                                                             }
+                                                        })
+                                                    }
+                                                    // -------------删除图片分类-------------------------
+                                                    const delImageCategory = () => {
+                                                        $.post('/admin/image/delImageCategory',{
+                                                            id: updateCategoryId.value
+                                                        },function (res) {
+                                                            layer.msg(res.msg)
+                                                            getAllImageCategory()
+                                                            getAllImage()
                                                         })
                                                     }
                                                     // -------------上传图片事件触发-------------------------
@@ -394,7 +415,21 @@
                                                         imageCategoryId.value = -1;
                                                         getAllImage();
                                                     }
-
+                                                    // -------------删除图片--------------------
+                                                    const delImage = () => {
+                                                        if (clickSelectImages.value.length == 0)  {
+                                                            layer.msg('请选择要删除的图片', {icon: 0});
+                                                            return
+                                                        }
+                                                        layer.confirm('确定要删除吗？删除前请确认是否有其他位置使用该图片', {}, function (index) {
+                                                            $.post('/admin/image/delete', {
+                                                                ids: clickSelectImages.value.map(item => item.id).join(','),
+                                                            }, function (res) {
+                                                                layer.msg(res.msg, {icon: 1})
+                                                                getAllImage();
+                                                            })
+                                                        })
+                                                    }
                                                     onMounted(() => {
                                                         clickSelectImages.value = [];
                                                         getAllImageCategory();
@@ -404,6 +439,7 @@
                                                         imageCategory,
                                                         fileInput,
                                                         imageList,
+                                                        delImage,
                                                         handleMouseOver,
                                                         handleImageClick,
                                                         defaultGetAllImage,

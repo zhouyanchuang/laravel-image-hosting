@@ -34,4 +34,17 @@ class ImageCategoryRepositories
         return $tree;
     }
 
+    // 根据id递归获取所有子分类ID
+    public static function getChildrenIds($id)
+    {
+        $childer = ImageCategorysModel::query()->where('parent_id', $id)->get();
+
+        $ids = [];
+        foreach ($childer as $child) {
+            $ids[] = $child->id;
+            $ids = array_merge($ids, self::getChildrenIds($child->id));
+        }
+        return $ids;
+    }
+
 }

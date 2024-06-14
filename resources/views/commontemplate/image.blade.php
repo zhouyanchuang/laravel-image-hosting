@@ -161,7 +161,7 @@
                         <button class="layui-btn layui-btn-sm  layui-btn-normal" @click="triggerFileUpload"><i
                                 class="layui-icon layui-icon-upload"></i>上传图片
                         </button>
-                        <button class="layui-btn layui-btn-sm  layui-btn-danger"><i
+                        <button class="layui-btn layui-btn-sm  layui-btn-danger" @click="delImage"><i
                                 class="layui-icon layui-icon-delete"></i>删除图片
                         </button>
                         <!-- 隐藏的文件输入框 -->
@@ -193,10 +193,19 @@
     </div>
 </script>
 <script>
+    window.Laravel = {!! json_encode([
+        'csrfToken' => csrf_token(),
+    ]) !!};
+</script>
+<script>
     document.addEventListener('DOMContentLoaded', function () {
         const {createApp, ref, onMounted, watch} = Vue;
         const {table, form, laydate, tree, laypage} = layui;
-
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': window.Laravel.csrfToken
+            }
+        });
         createApp({
             setup() {
                 const num = ref({!! $num !!});
@@ -274,7 +283,7 @@
                                             addImageCategory(index)
                                         })
                                     }
-                                    // --------添加图片分类----------
+                                    // -------------添加图片分类-----------------
                                     const addImageCategory = (index) => {
                                         $.get('/admin/image/addCategory', {
                                             title: addCategoryTitle.value,
@@ -312,7 +321,7 @@
 
                                         })
                                     }
-                                    // ------------获取图片分类-----------------
+                                    // -------------获取图片分类-----------------
                                     const getAllImageCategory = () => {
                                         $.get('/admin/image/getAllImageCategory', {}, function (resp) {
                                             if (resp.code == 1) {
@@ -338,7 +347,9 @@
                                                             return;
                                                         }
                                                         if (type === 'del') { //删除节点
-
+                                                            updateCategoryId.value = data.id;
+                                                            delImageCategory();
+                                                            return;
                                                         }
                                                     },
                                                     click: function (obj) {
@@ -350,7 +361,17 @@
                                             }
                                         })
                                     }
-                                    // -------------上传图片-------------------------
+                                    // -------------删除图片分类-------------------------
+                                    const delImageCategory = () => {
+                                        $.post('/admin/image/delImageCategory',{
+                                            id: updateCategoryId.value
+                                        },function (res) {
+                                            layer.msg(res.msg)
+                                            getAllImageCategory()
+                                            getAllImage()
+                                        })
+                                    }
+                                    // -------------上传图片--------------------
                                     const triggerFileUpload = () => {
                                         fileInput.value.click();
                                     }
@@ -381,7 +402,29 @@
                                             })
                                         }
                                     };
-                                    // -------------获取所有图片-------------------------
+                                    // -------------删除图片--------------------
+                                    const delImage = () => {
+                                        if (clickSelectImages.value.length == 0)  {
+                                            layer.msg('请选择要删除的图片', {icon: 0});
+                                            return
+                                        }
+                                        layer.confirm('确定要删除吗？删除前请确认是否有其他位置使用该图片', {}, function (index) {
+                                            $.post('/admin/image/delete', {
+                                                ids: clickSelectImages.value.map(item => item.id).join(','),
+                                            }, function (res) {
+                                                layer.msg(res.msg, {icon: 1})
+                                                clickSelectImages.value.map(item => {
+                                                    const index = selectImages.value.findIndex(i => i.id == item.id)
+                                                    if (index > -1) {
+                                                        selectImages.value.splice(index, 1)
+                                                    }
+                                                })
+                                                getAllImage();
+                                                layer.close(index)
+                                            })
+                                        })
+                                    }
+                                    // -------------获取所有图片-----------------
                                     const getAllImage = () => {
                                         $.get('/admin/image', {
                                             category_id: imageCategoryId.value,
@@ -411,6 +454,7 @@
                                         fileInput,
                                         imageList,
                                         selectImages,
+                                        delImage,
                                         removeSelectImage,
                                         handleMouseOver,
                                         handleImageClick,

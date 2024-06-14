@@ -10,11 +10,15 @@
     <script type="text/javascript" src="{{asset('js/vue@3.4.20/vue.js')}}"></script>
     <script type="text/javascript" src="{{asset('js/jquery.min.js')}}"></script>
     <script src="{{asset('layui/layui.js')}}"></script>
-    <title>Document</title>
+    <title>图片选择器</title>
 </head>
 <body>
 <div style="width: 50%;height:80%;margin: 0 auto;margin-top: 100px;">
-    <div class="layui-row">
+    <div style="width: 100%;height:20%;text-align: center;margin-bottom: 20px;">
+        <h1>图片上传-图片选择示例</h1>
+    </div>
+    <div class="layui-row" style="border: 1px dashed #000;padding: 10px;">
+
         <form class="layui-form" method="post" action="{{ url('admin/doAdd')}}">
             @csrf
             <div class="layui-form-item">

@@ -58,4 +58,24 @@ class ImageCategoryController extends Controller
 
         return ResponseHelper::success([],'修改成功');
     }
+
+    public function delImageCategory(Request $request)
+    {
+
+        $id = $request->get('id', 0);
+        $child_count = ImageCategorysModel::query()->where('parent_id', $id)->count();
+
+        if ($child_count > 0) {
+            return ResponseHelper::error('该分类下有子分类，请先删除子分类');
+        }
+
+        $imageCategory = ImageCategorysModel::query()->where('id', $id)->first();
+
+        if (!$imageCategory) {
+            return ResponseHelper::error('分类不存在');
+        }
+
+        $imageCategory->delete();
+        return ResponseHelper::success([],'删除成功');
+    }
 }

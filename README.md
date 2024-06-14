@@ -1,78 +1,65 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+**为什么要写图片选择器**
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+最近在项目中使用到多处需要上传图片的地方，并且公司 人手有限，身为后端的我就不得不全栈开发了，作为后端的我们实现图片上传很简单，但是运营一旦上传了错误的图片那么就得重新上传，那错误的图片就留在了服务器上，这样做显然会给服务器带来不必要的空间消耗，同时运营操作起来也不方便，比方说一张图片会在多个地方使用，如果每次都上传一次这个图片，显然也会给服务器硬盘带来存储压力，我在市面上没有找到一个适用于PHP封装的图片选择器，所以，当我写完后就想着造福大家，当然我这个也需要您认真看一下。如果您是PHPer并且您会Laravel，那这个对您来说用起来将会非常方便。
 
-## About Laravel
+**技术背景**
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+`Larvel6.0+Vue3+jquery+wangEditor5.0`
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**项目演示**
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1. 克隆项目
 
-## Learning Laravel
+   `git clone https://github.com/zhouyanchuang/laravel-image-hosting.git`
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+2. 进入项目根目录
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+   `php artisan key:generate`
 
-## Laravel Sponsors
+3. 生成软连接 根目录下运行
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+   `php artisan storage:link`
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
+4. 设置自动加载 根目录下运行
 
-## Contributing
+   `composer dump-autoload`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+5. 在项目根目录下有一个image-hosting.sql文件导入到你的数据库
 
-## Code of Conduct
+6. 在.env中配置你的数据库信息
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+7. 在你的集成环境中配置项目
 
-## Security Vulnerabilities
+8. 浏览器访问`你配置的域名/admin/index`查看演示
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+![](./public/img/index.jpg)
 
-## License
+![](./public/img/1718351296364.jpg)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**富文本中使用**
+
+![](./public/img/1718351411496.jpg)
+
+**代码中使用**
+
+1、点击图标选择图片
+
+```
+{{utils_select_image('test1','test1Name')}}
+utils_select_image方法有4个参数
+第一个是vue实例化的id
+第二个是隐藏input的name，用来给后端传值，值是以逗号分割的图片路径
+第三个是限制最多选择几张图片(int类型，默认是1)
+第四个是默认值，用来修改页面的图片初始化值的格式是数组
+示例值：[['url'=>'/storage/2024/06/14/10/27/1686706316.png']]，记得json_encode
+```
+
+2、富文本使用
+
+```
+{{utils_wange_editor('content')}}
+utils_wange_editor有两个参数
+第一个是隐藏的textarea的name和vue实例化的id,用来给后端传值
+第二个是默认值，用来初始化富文本框中的内容
+```
+
